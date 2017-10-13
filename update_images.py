@@ -13,8 +13,8 @@ def clear_serve_dir():
 def show_finished_photo(img):
     base='<p><img src="http://%s:%s/%s" style="height: 2    50px;" class="img"></p>'
     ibase = base %(SERVER_IP, IMAGE_SERVER_PORT, img)
-    fhtml = "/Users/jhansen/code/flask-image-search/app/templates/finished_template.html"
-    fohtml = "/Users/jhansen/code/flask-image-search/app/templates/finished.html"
+    fhtml = os.path.join(BASE_PATH, "app", "templates", "finished_template.html"
+    fohtml = os.path.join(BASE_PATH, "app", "templates", "finished.html"
     f = open(fhtml, 'r')
     fo = open(fohtml, 'w')
     flines = f.readlines()
@@ -24,9 +24,6 @@ def show_finished_photo(img):
         fo.write(flines[xx])
     f.close()
     fo.close()
-
-  
-
 
 def get_user_selection(thumbnail_dir):
     clear_serve_dir()
@@ -50,7 +47,7 @@ def get_user_selection(thumbnail_dir):
         img_selected = os.path.join(SERVE_DIR, img)
         if os.path.exists(img_selected):
             break
-    show_finished_photo(img)
+    #show_finished_photo(img)
     return img_selected
     
 if __name__ == '__main__':

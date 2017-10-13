@@ -3,7 +3,7 @@ import socket
 from flask import Flask, render_template, request, jsonify
 import sys
 sys.path.append('..')
-from settings import SEAL_IP, SEAL_RX_PORT
+from settings import SEAL_IP, SEAL_RX_PORT, SERVER_IP, IMAGE_SERVER_PORT, BASE_PATH
 
 
 # create flask instance
@@ -11,11 +11,25 @@ app = Flask(__name__)
 
 INDEX = os.path.join(os.path.dirname(__file__), 'welcome.csv')
 
+def init_files():
+    fi = open(os.path.join(BASE_PATH, 'app', 'templates', 'index_template.html'), 'r')
+    fo = open(os.path.join(BASE_PATH, 'app', 'templates', 'index.html'), 'w')
+    flines = fi.readlines()
+
+    actual = '%s:%s' %(SERVER_IP, IMAGE_SERVER_PORT)
+    dummy = '127.0.0.1:8111'
+    for xx, line in enumerate(flines):
+        if dummy in line:
+            ss = line.replace(dummy, actual)
+            flines[xx] = ss
+        fo.write(flines[xx])
+    fo.close()
+    fi.close()
+
 
 # main route
 @app.route('/finish')
 def finish():
-    print("AT FINISH")
     return render_template('finished.html')
 
 @app.route('/')
@@ -28,9 +42,7 @@ def index():
 def search():
 
     if request.method == "POST":
-
         RESULTS_ARRAY = []
-
         # get url
         image_url = request.form.get('img')
 
@@ -41,7 +53,6 @@ def search():
             MESSAGE = os.path.split(image_url)[-1]
             print("MESSAGE", MESSAGE)
             to_server_sock.sendto(MESSAGE, ("127.0.0.1", SEAL_RX_PORT))
-            finish()
             return jsonify(results=({"image":image_url}))
             #return jsonify(results=(RESULTS_ARRAY[::-1][:3]))
         except:
@@ -51,4 +62,5 @@ def search():
 
 # run!
 if __name__ == '__main__':
+    init_files()
     app.run('0.0.0.0', debug=True)
