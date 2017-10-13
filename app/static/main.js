@@ -6,7 +6,7 @@ $("#results-table").hide();
 $("#error").hide();
 
 // global
-var url = 'http://static.pyimagesearch.com.s3-us-west-2.amazonaws.com/vacation-photos/dataset/';
+var url = 'http://fake/';
 var data = [];
 
 $(function() {
@@ -43,23 +43,24 @@ $(function() {
       data : { img : image },
       // handle success
       success: function(result) {
-        console.log(result.results);
-        var data = result.results
-        // show table
-        $("#results-table").show();
-        // loop through results, append to dom
-        for (i = 0; i < data.length; i++) {
-          $("#results").append('<tr><th><a href="'+url+data[i]["image"]+'"><img src="'+url+data[i]["image"]+
-            '" class="result-img"></a></th><th>'+data[i]['score']+'</th></tr>')
-        };
-      },
-      // handle error
-      error: function(error) {
-        console.log(error);
-        // append to dom
-        $("#error").append()
-      }
-    });
+	      $.ajax({type:"POST", url:"/finish"})
+//        console.log(result.results);
+//        var data = result.results
+//        // show table
+//        $("#results-table").show();
+//        // loop through results, append to dom
+//        for (i = 0; i < data.length; i++) {
+//          $("#results").append('<tr><th><a href="'+url+data[i]["image"]+'"><img src="'+url+data[i]["image"]+
+//            '" class="result-img"></a></th><th>'+data[i]['score']+'</th></tr>')
+//        };
+//      },
+//      // handle error
+//      error: function(error) {
+//        console.log(error);
+//        // append to dom
+//        $("#error").append()
+//      }
+//    });
 
   });
 

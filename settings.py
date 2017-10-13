@@ -1,0 +1,10 @@
+import os
+BASE_PATH=os.path.split(os.path.realpath(__file__))[0]
+SERVE_DIR=os.path.join(BASE_PATH, "images")
+SERVER_IP="142.157.13.239"
+IMAGE_SERVER_PORT=8111
+WEBPAGE_SERVER_PORT=5000
+SERVER_RX_PORT=8001
+
+SEAL_IP=SERVER_IP
+SEAL_RX_PORT=8000
