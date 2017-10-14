@@ -5,13 +5,14 @@ import sys
 sys.path.append('..')
 from settings import SEAL_IP, SEAL_RX_PORT, SERVER_IP, IMAGE_SERVER_PORT, BASE_PATH
 
-
 # create flask instance
 app = Flask(__name__)
 
 INDEX = os.path.join(os.path.dirname(__file__), 'welcome.csv')
 
 def init_files():
+    """ super hack cause I didn't know how to update vars in html - instead,
+    just fill in a template with known python vars and write it as index.html """
     fi = open(os.path.join(BASE_PATH, 'app', 'templates', 'index_template.html'), 'r')
     fo = open(os.path.join(BASE_PATH, 'app', 'templates', 'index.html'), 'w')
     flines = fi.readlines()
@@ -26,7 +27,6 @@ def init_files():
     fo.close()
     fi.close()
 
-
 # main route
 @app.route('/finish')
 def finish():
@@ -35,8 +35,6 @@ def finish():
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
 
 @app.route('/search', methods=['POST'])
 def search():

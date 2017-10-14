@@ -9,3 +9,8 @@ Web page is displayed at SERVER_IP specified in settings:
 To update images shown to user and report back selection, call the function: 
 `get_user_selection(directory_with_images_to_show_users)`
 from  update_images.py
+
+This assumes that there is a server running at IMAGE_SERVER_PORT from settings.py. 
+To run this in python, navigate to the `images` directory and run 
+`python -m SimpleHTTPServer 8111` where 8111 is the IMAGE_SERVER_PORT specified
+in settings.py. 
