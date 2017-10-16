@@ -77,23 +77,23 @@ def get_user_selection(thumbnail_dir):
     from_server_sock.settimeout(SELECTION_TIMEOUT)
     from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
 
-    print("Refresh browser")
     dr_user.refresh()
     start_time = time.time()
 
     try:
         img, addr = from_server_sock.recvfrom(1024)
-        print("%s - user selected: %s"%(__file__, img))
+        logging.info("%s - user selected: %s"%(__file__, img))
         img_selected = os.path.join(SERVE_DIR, img)
         if os.path.exists(img_selected):
             name_selected = os.path.split(img_selected)[1]
             real_selected = inp_img_names[sym_img_names.index(name_selected)]
     except:
-        print("TIMED OUT WITH NO SELECTION")
+        logging.info("TIMED OUT after %s secs WITH NO SELECTION" %SELECTION_TIMEOUT)
         real_selected = "NONE"
+    logging.info("Selection=%s" %real_selected)
     return real_selected
     
 if __name__ == '__main__':
-    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'))
-    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish'))
-    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'))
+    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces')))
+    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish')))
+    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces')))
