@@ -90,8 +90,7 @@ def get_user_selection(thumbnail_dir):
             real_selected = inp_img_names[sym_img_names.index(name_selected)]
     except:
         print("TIMED OUT WITH NO SELECTION")
-
-    real_selected = "NONE SELECTED"
+        real_selected = "NONE"
     return real_selected
     
 if __name__ == '__main__':
