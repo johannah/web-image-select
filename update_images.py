@@ -1,4 +1,3 @@
-from selenium import webdriver
 import socket
 import sys
 import requests
@@ -16,8 +15,7 @@ import time
 import os
 from glob import glob
 
-if not os.path.exists(SERVE_DIR):
-    os.mkdir(SERVE_DIR)
+#from selenium import webdriver
 #dr_user = webdriver.Chrome()
 #dr_user.get('http://%s:%s' %(SERVER_IP, WEBPAGE_SERVER_PORT))
 
