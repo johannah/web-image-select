@@ -1,4 +1,5 @@
 import os
+SELECTION_TIMEOUT=30
 BASE_PATH=os.path.split(os.path.realpath(__file__))[0]
 SERVE_DIR=os.path.join(BASE_PATH, "images")
 #SERVER_IP="142.157.13.239"

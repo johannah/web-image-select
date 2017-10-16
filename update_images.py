@@ -8,7 +8,7 @@ from datetime import datetime
 from time import strftime
 log_file = datetime.now().strftime('user_preference_%02H%02M_%02d%02m%04Y.log')
 
-from settings import (SEAL_IP, SEAL_RX_PORT, 
+from settings import (SEAL_IP, SEAL_RX_PORT, SELECTION_TIMEOUT,
                       SERVER_IP, IMAGE_SERVER_PORT, BASE_PATH, 
                       SERVE_DIR, WEBPAGE_SERVER_PORT)
 
@@ -74,20 +74,25 @@ def get_user_selection(thumbnail_dir):
         os.symlink(i, sym_path)
     init_files(tt)
     from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    from_server_sock.settimeout(SELECTION_TIMEOUT)
     from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
+
     print("Refresh browser")
     dr_user.refresh()
     start_time = time.time()
 
-    while True:
+    try:
         img, addr = from_server_sock.recvfrom(1024)
         print("%s - user selected: %s"%(__file__, img))
         img_selected = os.path.join(SERVE_DIR, img)
         if os.path.exists(img_selected):
-            break
-    #real_img_selected = inp_img_names[sym_img_names.index(img_selected)]
-    name_selected = os.path.split(img_selected)[1]
-    real_selected = inp_img_names[sym_img_names.index(name_selected)]
+            name_selected = os.path.split(img_selected)[1]
+            real_selected = inp_img_names[sym_img_names.index(name_selected)]
+    except:
+        print("TIMED OUT WITH NO SELECTION")
+
+    real_selected = "NONE SELECTED"
+    return real_selected
     
 if __name__ == '__main__':
     get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'))
