@@ -3,9 +3,9 @@ import sys
 import requests
 import numpy as np
 import logging
+logging.getLogger().addHandler(logging.StreamHandler())
 from datetime import datetime
 from time import strftime
-log_file = datetime.now().strftime('user_preference_%02H%02M_%02d%02m%04Y.log')
 
 from settings import (SEAL_IP, SEAL_RX_PORT, SELECTION_TIMEOUT,
                       SERVER_IP, IMAGE_SERVER_PORT, BASE_PATH, 
@@ -60,43 +60,52 @@ def init_files(images):
     fo.close()
     fi.close()
 
-def get_user_selection(thumbnail_dir):
+def get_user_selection(thumbnail_dir, display_only=True):
+    requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
     tt = int(time.time())
     clear_serve_dir()
     max_images = 10
     source_imgs = glob(os.path.join(thumbnail_dir, '*.png'))
     num = min(max_images, len(source_imgs))
     inp_img_names = source_imgs[:num]
+    if num == 0:
+        logging.error("No source images found in thumbnails_dir: %s" %thumbnail_dir)
+        return "NONE"
     sym_img_names = [] 
     sym_img_paths = []
+    logging.info("Creating sym-links from %s to %s" %(thumbnail_dir, SERVE_DIR))
     for xx, i in enumerate(inp_img_names):
         sym_name = "%02d_%s.png" %(xx+1,tt)
-        print(sym_name)
         sym_path = os.path.join(SERVE_DIR, sym_name) 
         sym_img_names.append(sym_name)
         sym_img_paths.append(sym_path)
         os.symlink(i, sym_path)
     init_files(sym_img_paths)
+    # sometimes this doesn't go through the first time???
+    requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
     requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
     #dr_user.refresh()
-    start_time = time.time()
-    try:
-        from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        from_server_sock.settimeout(SELECTION_TIMEOUT)
-        from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
-        img, addr = from_server_sock.recvfrom(1024)
-        logging.info("%s - user selected: %s"%(__file__, img))
-        img_selected = os.path.join(SERVE_DIR, img)
-        if os.path.exists(img_selected):
-            name_selected = os.path.split(img_selected)[1]
-            real_selected = inp_img_names[sym_img_names.index(name_selected)]
-    except:
-        logging.info("TIMED OUT after %s secs WITH NO SELECTION" %SELECTION_TIMEOUT)
-        real_selected = "NONE"
-    logging.info("Selection=%s" %real_selected)
-    return real_selected
+    if not display_only:
+        start_time = time.time()
+        try:
+            from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            from_server_sock.settimeout(SELECTION_TIMEOUT)
+            from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
+            img, addr = from_server_sock.recvfrom(1024)
+            logging.info("%s - user selected: %s"%(__file__, img))
+            img_selected = os.path.join(SERVE_DIR, img)
+            if os.path.exists(img_selected):
+                name_selected = os.path.split(img_selected)[1]
+                return inp_img_names[sym_img_names.index(name_selected)]
+            else:
+                logging.error("IMAGE DOES NOT EXIST:%s" %name_selected)
+        except:
+            logging.info("TIMED OUT after %s secs WITH NO SELECTION" %SELECTION_TIMEOUT)
+        return "NONE"
+    else:
+        return "NODISPLAY"
     
 if __name__ == '__main__':
-    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces')))
-    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish')))
-    print(get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces')))
+    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'), False))
+    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish'), False))
+    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'), display_only=True))

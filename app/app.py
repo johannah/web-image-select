@@ -11,7 +11,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 INDEX = os.path.join(os.path.dirname(__file__), 'index.csv')
 
-shouldUpdate = False
+shouldUpdate = True
 
 @app.route('/updatedFiles')
 def updatedFiles():
