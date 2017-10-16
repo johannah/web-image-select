@@ -83,7 +83,9 @@ def get_user_selection(thumbnail_dir, display_only=True):
     init_files(sym_img_paths)
     # sometimes this doesn't go through the first time???
     requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
+    time.sleep(.2)
     requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
+    time.sleep(.2)
     #dr_user.refresh()
     if not display_only:
         start_time = time.time()
@@ -101,6 +103,7 @@ def get_user_selection(thumbnail_dir, display_only=True):
                 logging.error("IMAGE DOES NOT EXIST:%s" %name_selected)
         except:
             logging.info("TIMED OUT after %s secs WITH NO SELECTION" %SELECTION_TIMEOUT)
+        requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
         return "NONE"
     else:
         return "NODISPLAY"

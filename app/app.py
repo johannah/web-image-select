@@ -72,4 +72,6 @@ def search():
 
 # run!
 if __name__ == '__main__':
+    if not os.path.exists('templates/index.html'):
+        os.system('cp templates/index_template.html templates/index.html')
     app.run('0.0.0.0', debug=True)
