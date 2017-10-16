@@ -1,7 +1,6 @@
 from selenium import webdriver
 import socket
 import sys
-import webbrowser
 import numpy as np
 import logging
 from datetime import datetime
