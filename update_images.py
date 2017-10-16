@@ -1,10 +1,13 @@
 from selenium import webdriver
 import socket
 import sys
-sys.path.append('imageme')
-from imageme import serve_dir
 import webbrowser
 import numpy as np
+import logging
+from datetime import datetime
+from time import strftime
+log_file = datetime.now().strftime('user_preference_%02H%02M_%02d%02m%04Y.log')
+
 from settings import (SEAL_IP, SEAL_RX_PORT, 
                       SERVER_IP, IMAGE_SERVER_PORT, BASE_PATH, 
                       SERVE_DIR, WEBPAGE_SERVER_PORT)
@@ -13,6 +16,8 @@ import time
 import os
 from glob import glob
 
+if not os.path.exists(SERVE_DIR):
+    os.mkdir(SERVE_DIR)
 dr_user = webdriver.Chrome()
 dr_user.get('http://%s:%s' %(SERVER_IP, WEBPAGE_SERVER_PORT))
 
@@ -80,11 +85,11 @@ def get_user_selection(thumbnail_dir):
         img_selected = os.path.join(SERVE_DIR, img)
         if os.path.exists(img_selected):
             break
-    #show_finished_photo(img)
-    return img_selected
+    #real_img_selected = inp_img_names[sym_img_names.index(img_selected)]
+    name_selected = os.path.split(img_selected)[1]
+    real_selected = inp_img_names[sym_img_names.index(name_selected)]
     
 if __name__ == '__main__':
-    get_user_selection(os.path.join(BASE_PATH, 'images-faces'))
-    print("UPDATING IMAGES")
-    print("Loading fish")
-    get_user_selection(os.path.join(BASE_PATH, 'images-sym'))
+    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'))
+    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish'))
+    get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'))
