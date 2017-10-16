@@ -1,3 +1,4 @@
+from selenium import webdriver
 import socket
 import sys
 sys.path.append('imageme')
@@ -12,6 +13,8 @@ import time
 import os
 from glob import glob
 
+dr_user = webdriver.Chrome()
+dr_user.get('http://%s:%s' %(SERVER_IP, WEBPAGE_SERVER_PORT))
 
 def clear_serve_dir():
     serve_imgs = glob(os.path.join(SERVE_DIR, '*.png'))
@@ -51,8 +54,6 @@ def init_files(tt):
     fi.close()
 
 def get_user_selection(thumbnail_dir):
-
-
     tt = int(time.time())
     clear_serve_dir()
     max_images = 10
@@ -69,9 +70,8 @@ def get_user_selection(thumbnail_dir):
     init_files(tt)
     from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
-    url = 'http://%s:%s' %(SERVER_IP, WEBPAGE_SERVER_PORT)
-    print('opening',url)
-    webbrowser.open(url,new=0,autoraise=True)
+    print("Refresh browser")
+    dr_user.refresh()
     start_time = time.time()
 
     while True:
@@ -86,4 +86,5 @@ def get_user_selection(thumbnail_dir):
 if __name__ == '__main__':
     get_user_selection(os.path.join(BASE_PATH, 'images-faces'))
     print("UPDATING IMAGES")
+    print("Loading fish")
     get_user_selection(os.path.join(BASE_PATH, 'images-sym'))
