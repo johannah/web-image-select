@@ -5,6 +5,10 @@ $("#searching").hide();
 $("#results-table").hide();
 $("#error").hide();
 
+var reloadPage = function() {
+	location.reload();
+}
+
 // global
 var url = 'http://fake/';
 var data = [];
@@ -64,3 +68,28 @@ $(function() {
   });
 
 });
+
+var shouldUpdate = function() {
+    $.ajax({
+      type: "GET",
+      url: "/shouldUpdate",
+      data : {},
+      // handle success
+      success: function(result) {
+	console.log("success");
+        console.log(result.results);
+	if (result.results.shouldUpdate) {
+		console.log('reloading!');
+		location.reload();
+	}
+      },
+      // handle error
+      error: function(error) {
+	console.log("error");
+        console.log(error);
+        // append to dom
+        $("#error").append()
+      }
+    });
+}
+setInterval(shouldUpdate, 1000);

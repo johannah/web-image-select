@@ -11,6 +11,14 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 INDEX = os.path.join(os.path.dirname(__file__), 'index.csv')
 
+shouldUpdate = False
+
+@app.route('/updatedFiles')
+def updatedFiles():
+    global shouldUpdate 
+    shouldUpdate = True
+    return
+
 @app.after_request
 def add_header(response):
     """
@@ -30,6 +38,15 @@ def finish():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/shouldUpdate')
+def do_update():
+    global shouldUpdate
+    if shouldUpdate:
+        shouldUpdate = False
+        return jsonify(results=({"shouldUpdate": True}));
+    else:
+        return jsonify(results=({"shouldUpdate": False}));
 
 @app.route('/search', methods=['POST'])
 def search():
