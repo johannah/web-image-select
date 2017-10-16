@@ -7,25 +7,20 @@ from settings import SEAL_IP, SEAL_RX_PORT, SERVER_IP, IMAGE_SERVER_PORT, BASE_P
 
 # create flask instance
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-INDEX = os.path.join(os.path.dirname(__file__), 'welcome.csv')
+INDEX = os.path.join(os.path.dirname(__file__), 'index.csv')
 
-def init_files():
-    """ super hack cause I didn't know how to update vars in html - instead,
-    just fill in a template with known python vars and write it as index.html """
-    fi = open(os.path.join(BASE_PATH, 'app', 'templates', 'index_template.html'), 'r')
-    fo = open(os.path.join(BASE_PATH, 'app', 'templates', 'index.html'), 'w')
-    flines = fi.readlines()
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
-    actual = '%s:%s' %(SERVER_IP, IMAGE_SERVER_PORT)
-    dummy = '127.0.0.1:8111'
-    for xx, line in enumerate(flines):
-        if dummy in line:
-            ss = line.replace(dummy, actual)
-            flines[xx] = ss
-        fo.write(flines[xx])
-    fo.close()
-    fi.close()
 
 # main route
 @app.route('/finish')
@@ -60,5 +55,4 @@ def search():
 
 # run!
 if __name__ == '__main__':
-    init_files()
     app.run('0.0.0.0', debug=True)

@@ -43,24 +43,23 @@ $(function() {
       data : { img : image },
       // handle success
       success: function(result) {
-	      $.ajax({type:"POST", url:"/finish"})
-//        console.log(result.results);
-//        var data = result.results
-//        // show table
-//        $("#results-table").show();
-//        // loop through results, append to dom
-//        for (i = 0; i < data.length; i++) {
-//          $("#results").append('<tr><th><a href="'+url+data[i]["image"]+'"><img src="'+url+data[i]["image"]+
-//            '" class="result-img"></a></th><th>'+data[i]['score']+'</th></tr>')
-//        };
-//      },
-//      // handle error
-//      error: function(error) {
-//        console.log(error);
-//        // append to dom
-//        $("#error").append()
-//      }
-//    });
+        console.log(result.results);
+        var data = result.results
+        // show table
+        $("#results-table").show();
+        // loop through results, append to dom
+        for (i = 0; i < data.length; i++) {
+          $("#results").append('<tr><th><a href="'+url+data[i]["image"]+'"><img src="'+url+data[i]["image"]+
+            '" class="result-img"></a></th><th>'+data[i]['score']+'</th></tr>')
+        };
+      },
+      // handle error
+      error: function(error) {
+        console.log(error);
+        // append to dom
+        $("#error").append()
+      }
+    });
 
   });
 
