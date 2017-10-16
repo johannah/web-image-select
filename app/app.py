@@ -52,10 +52,10 @@ def do_update():
 def search():
 
     if request.method == "POST":
-        RESULTS_ARRAY = []
+        global shouldUpdate 
+        shouldUpdate = True
         # get url
         image_url = request.form.get('img')
-
         try:
             ## return success
             print('you selected image', image_url)

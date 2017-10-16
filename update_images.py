@@ -82,10 +82,9 @@ def get_user_selection(thumbnail_dir, display_only=True):
         os.symlink(i, sym_path)
     init_files(sym_img_paths)
     # sometimes this doesn't go through the first time???
-    requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
-    time.sleep(.2)
-    requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
-    time.sleep(.2)
+    for i in range(5):
+        requests.get('http://%s:%s/updatedFiles' %(SERVER_IP, WEBPAGE_SERVER_PORT))
+        time.sleep(.01)
     #dr_user.refresh()
     if not display_only:
         start_time = time.time()
@@ -109,6 +108,7 @@ def get_user_selection(thumbnail_dir, display_only=True):
         return "NODISPLAY"
     
 if __name__ == '__main__':
-    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'), False))
-    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish'), False))
-    print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'), display_only=True))
+    while True:
+        print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-faces'), False))
+        print('RETURNED', get_user_selection(os.path.join(BASE_PATH, 'test-data', 'images-fish'), False))
+        time.sleep(1)

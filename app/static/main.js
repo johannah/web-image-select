@@ -76,7 +76,7 @@ var shouldUpdate = function() {
       data : {},
       // handle success
       success: function(result) {
-	console.log("success");
+	console.log("success in update func");
         console.log(result.results);
 	if (result.results.shouldUpdate) {
 		console.log('reloading!');
@@ -92,4 +92,4 @@ var shouldUpdate = function() {
       }
     });
 }
-setInterval(shouldUpdate, 1000);
+setInterval(shouldUpdate, 10);
