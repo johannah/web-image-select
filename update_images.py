@@ -73,14 +73,13 @@ def get_user_selection(thumbnail_dir):
         sym_img_names.append(sym_name)
         os.symlink(i, sym_path)
     init_files(tt)
-    from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    from_server_sock.settimeout(SELECTION_TIMEOUT)
-    from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
 
     dr_user.refresh()
     start_time = time.time()
-
     try:
+        from_server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        from_server_sock.settimeout(SELECTION_TIMEOUT)
+        from_server_sock.bind(("127.0.0.1", SEAL_RX_PORT))
         img, addr = from_server_sock.recvfrom(1024)
         logging.info("%s - user selected: %s"%(__file__, img))
         img_selected = os.path.join(SERVE_DIR, img)
